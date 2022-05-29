@@ -9,17 +9,20 @@
 #include "SampleAnalyzer/Commons/Service/ExceptionService.h"
 
 namespace MDUtils {
-	std::pair<MAfloat64,MAfloat64> CombineWithDistribution(std::vector<MAfloat64> &weight_values, std::string method){
+	std::pair<MAfloat64,MAfloat64> CombineWithDistribution(unordered_map<MAuint32, MAfloat64> &weight_hash, std::string method){
 
+		MAuint32 sum = 0;
+		int size = weight_hash.size();
+		for(const auto &[id, value] : weight_hash){
+			sum+=value;
+		}
 		if(method == "gaussian"){
-			MAfloat64 sum = std::accumulate(weight_values.begin(), weight_values.end(), 0);
-			MAfloat64 mean = sum/weight_values.size();
+			MAfloat64 mean = sum/size;
 			MAfloat64 squarediff = 0;
-			for(const auto &val : weight_values){
-				squarediff += pow(val-mean, 2);
+			for(const auto &[id, value] : weight_hash){
+				squarediff += pow(value-mean, 2);
 			}
-			return std::make_pair(mean, sqrt(squarediff/weight_values.size()));
-
+			return std::make_pair(mean, sqrt(squarediff/size));		
 		}	
 	}
 }
@@ -78,13 +81,8 @@ class WeightContainer {
 			}
 		}
 
-		std::pair<MAfloat64, MAfloat64> CombineWeights(const std::string method){
-			vector<MAfloat64> weight_values;
-			for(const auto &[id, value] : weights){
-				weight_values.push_back(value);
-			}
-			
-			return weight_values.size()>0?MDUtils::CombineWithDistribution(method):std::make_pair(0,0);
+		std::pair<MAfloat64, MAfloat64> CombineWeights(const std::string method){	
+			return weights.size()>0?MDUtils::CombineWithDistribution(method):std::make_pair(0,0);
 		}
 
 };
