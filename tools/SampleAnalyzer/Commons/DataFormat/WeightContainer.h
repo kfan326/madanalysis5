@@ -11,7 +11,7 @@
 namespace MDUtils {
 	std::pair<MAfloat64,MAfloat64> CombineWithDistribution(std::unordered_map<MAuint32, MAfloat64> &weight_hash, std::string method){
 
-		MAuint32 sum = 0;
+		MAfloat64 sum = 0;
 		int size = weight_hash.size();
 		for(const auto &[id, value] : weight_hash){
 			sum+=value;
