@@ -58,10 +58,18 @@ class WeightContainer {
 
 		const MAfloat64& operator[](const MAuint32 id) const {return GetWeight[id];}
 
-		WeightContainer& operator*(MAfloat64 multiple){
+		void operator*=(const MAfloat64 multiple){
 			for(auto &[id, value] : weights){
 				value *= multiple;
 			}
+		}
+
+		WeightContainer& operator* (const MAfloat64 multiple) {
+			for(auto &[id, value] : weights){
+				value *= multiple;
+			}
+			return *this;
+
 		}
 
 		void Print() const{
