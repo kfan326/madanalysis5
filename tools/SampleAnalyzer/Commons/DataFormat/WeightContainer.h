@@ -9,13 +9,14 @@
 #include "SampleAnalyzer/Commons/Service/ExceptionService.h"
 
 namespace MDUtils {
-	std::pair<MAfloat64,MAfloat64> CombineWithDistribution(unordered_map<MAuint32, MAfloat64> &weight_hash, std::string method){
+	std::pair<MAfloat64,MAfloat64> CombineWithDistribution(std::unordered_map<MAuint32, MAfloat64> &weight_hash, std::string method){
 
 		MAuint32 sum = 0;
 		int size = weight_hash.size();
 		for(const auto &[id, value] : weight_hash){
 			sum+=value;
 		}
+
 		if(method == "gaussian"){
 			MAfloat64 mean = sum/size;
 			MAfloat64 squarediff = 0;
@@ -33,7 +34,10 @@ namespace MA5
 
 class WeightContainer {
 	private:
+
+		//hash map for id-value pair, last element stores if of last added element.
 		std::unordered_map<MAuint32, MAfloat64> weights;
+		MAuint32 last_element = -1;
 
 	public:
 
@@ -42,15 +46,18 @@ class WeightContainer {
 
 		void Reset(){
 			weights.clear();
+			last_element = -1;
 		}
-
+		
+		
 		MAbool Add(MAuint32 id, MAfloat64 value){
 			weights[id] = value;
+			last_element = id;
 		}
 
 		const std::unordered_map<MAuint32, MAfloat64>& GetWeights() {return weights;}
 
-		const MAfloat64& GetWeight(const MAuint32 id) const {
+		MAfloat64 GetWeight(const MAuint32 id) const {
 			if(weights.find(id) != weights.end()){
 				return weights[id];
 			}
@@ -59,7 +66,7 @@ class WeightContainer {
 			}
 		}
 
-		const MAfloat64& operator[](const MAuint32 id) const {return GetWeight[id];}
+		MAfloat64 operator[](const MAuint32 id) const {return GetWeight[id];}
 
 		void operator*=(const MAfloat64 multiple){
 			for(auto &[id, value] : weights){
@@ -75,17 +82,38 @@ class WeightContainer {
 
 		}
 
+		void operator+=(const MAfloat64 input){
+			for(auto &[id, value] : weights){
+				value += input;
+			}
+		}
+
+		WeightContainer& operator+ (const MAfloat64 input) {
+			for(auto &[id, value] : weights){
+				value += input;
+			}
+			return *this;
+
+		}
+
 		void Print() const{
 			for(const auto &[id, value] : weights){
 				INFO << "ID=" << id << " : " << value << endmsg;
 			}
 		}
 
-		std::pair<MAfloat64, MAfloat64> CombineWeights(const std::string method){	
-			return weights.size()>0?MDUtils::CombineWithDistribution(method):std::make_pair(0,0);
+		MDfloat64 lastValue(){
+			if(last_element != -1) {return weights[last_element];}
+			else {
+				throw EXCEPTION_ERROR("There are no weights to return!")
+			}
 		}
 
-};
+		std::pair<MAfloat64, MAfloat64> CombineWeights(const std::string method){	
+			return weights.size()>0?MDUtils::CombineWithDistribution(weights, method):std::make_pair(0,0);
+		}
+
+	};
 
 }
 
