@@ -37,11 +37,11 @@ class WeightContainer {
 
 		//hash map for id-value pair, last element stores if of last added element.
 		std::unordered_map<MAuint32, MAfloat64> weights;
-		MAuint32 last_element = -1;
+		MAuint32 last_element;
 
 	public:
 
-		WeightContainer(){}
+		WeightContainer(){last_element = -1;}
 		~WeightContainer(){}
 
 		void Reset(){
