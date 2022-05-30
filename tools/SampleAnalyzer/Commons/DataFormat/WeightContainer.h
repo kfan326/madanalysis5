@@ -35,7 +35,7 @@ namespace MA5
 class WeightContainer {
 	private:
 
-		//hash map for id-value pair, last element stores if of last added element.
+		//hash map for id-value pair, last element stores id of last added element.
 		std::unordered_map<MAuint32, MAfloat64> weights;
 		MAuint32 last_element;
 
@@ -53,9 +53,10 @@ class WeightContainer {
 		MAbool Add(MAuint32 id, MAfloat64 value){
 			weights[id] = value;
 			last_element = id;
+			return (weights.find(id) != weights.end())?true:false;
 		}
 
-		const std::unordered_map<MAuint32, MAfloat64>& GetWeights() {return weights;}
+		const std::unordered_map<MAuint32, MAfloat64>& GetWeights() const {return weights;}
 
 		MAfloat64 GetWeight(const MAuint32 id) const {
 			if(weights.find(id) != weights.end()){
