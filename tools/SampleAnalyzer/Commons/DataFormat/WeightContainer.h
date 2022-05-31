@@ -52,8 +52,14 @@ class WeightContainer {
 		
 		MAbool Add(MAuint32 id, MAfloat64 value){
 			weights[id] = value;
-			last_element = id;
-			return (weights.find(id) != weights.end())?true:false;
+			bool insert_success = weights.find(id) != weights.end();
+			if(insert_sucess) {
+				last_element = id;
+			} else{
+				throw EXCEPTION_WARNING("The Weight '"+id+
+                                "' is defined at two times. Redundant values are skipped.","",0);
+			}
+			return insert_success;		
 		}
 
 		const std::unordered_map<MAuint32, MAfloat64>& GetWeights() const {return weights;}
