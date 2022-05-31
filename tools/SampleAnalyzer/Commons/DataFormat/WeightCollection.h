@@ -39,6 +39,7 @@
 #include "SampleAnalyzer/Commons/Service/ExceptionService.h"
 
 
+
 namespace MA5
 {
 
@@ -161,6 +162,8 @@ class WeightCollection
       INFO << "ID=" << it->first << " : " << it->second << endmsg;
     }
   }
+
+
 
 
 };
