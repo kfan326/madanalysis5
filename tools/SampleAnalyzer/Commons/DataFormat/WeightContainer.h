@@ -13,18 +13,20 @@ namespace MDUtils {
 
 		MAfloat64 sum = 0;
 		int size = weight_hash.size();
-		for(const auto &[id, value] : weight_hash){
-			sum+=value;
+		for(const auto &id_value : weight_hash){
+			sum+=id_value.second;
 		}
 
 		if(method == "gaussian"){
 			MAfloat64 mean = sum/size;
 			MAfloat64 squarediff = 0;
-			for(const auto &[id, value] : weight_hash){
-				squarediff += pow(value-mean, 2);
+			for(const auto &id_value : weight_hash){
+				squarediff += pow(id_value.second-mean, 2);
 			}
 			return std::make_pair(mean, sqrt(squarediff/size));		
-		}	
+		}
+
+		return std::make_pair(0 ,0);
 	}
 }
 
@@ -48,15 +50,17 @@ class WeightContainer {
 			weights.clear();
 			last_element = -1;
 		}
+
+		MAuint32 size() const {return weights.size();}
 		
 		
 		MAbool Add(MAuint32 id, MAfloat64 value){
 			weights[id] = value;
 			bool insert_success = weights.find(id) != weights.end();
-			if(insert_sucess) {
+			if(insert_success) {
 				last_element = id;
 			} else{
-				throw EXCEPTION_WARNING("The Weight '"+id+
+				throw EXCEPTION_WARNING("The Weight '" + std::to_string(id) +
                                 "' is defined at two times. Redundant values are skipped.","",0);
 			}
 			return insert_success;		
@@ -64,60 +68,42 @@ class WeightContainer {
 
 		const std::unordered_map<MAuint32, MAfloat64>& GetWeights() const {return weights;}
 
-		MAfloat64 GetWeight(const MAuint32 id) const {
-			if(weights.find(id) != weights.end()){
-				return weights[id];
-			}
-			else {
-				throw EXCEPTION_ERROR("The Weight '" + to_string(id) + "' is not defined. Return null value.", "", 0);
-			}
+		const MAfloat64& GetWeight (const MAuint32 id) const {
+			return weights.find(id)->second;
 		}
 
-		MAfloat64 operator[](const MAuint32 id) const {return GetWeight[id];}
+		const MAfloat64& operator[](const MAuint32 id) const {return GetWeight(id);}
 
 		void operator*=(const MAfloat64 multiple){
-			for(auto &[id, value] : weights){
-				value *= multiple;
+			for(auto &id_value : weights){
+				id_value.second *= multiple;
 			}
 		}
 
-		WeightContainer& operator* (const MAfloat64 multiple) {
-			for(auto &[id, value] : weights){
-				value *= multiple;
-			}
-			return *this;
-
-		}
-
+	
 		void operator+=(const MAfloat64 input){
-			for(auto &[id, value] : weights){
-				value += input;
+			for(auto &id_value : weights){
+				id_value.second += input;
 			}
-		}
-
-		WeightContainer& operator+ (const MAfloat64 input) {
-			for(auto &[id, value] : weights){
-				value += input;
-			}
-			return *this;
-
 		}
 
 		void Print() const{
-			for(const auto &[id, value] : weights){
-				INFO << "ID=" << id << " : " << value << endmsg;
+			for(const auto &id_value : weights){
+				INFO << "ID=" << id_value.first << " : " << id_value.second << endmsg;
 			}
 		}
 
-		MDfloat64 lastValue(){
-			if(last_element != -1) {return weights[last_element];}
+		MAfloat64 lastValue(){
+			return weights[last_element];
+			/*
 			else {
 				throw EXCEPTION_ERROR("There are no weights to return!")
 			}
+			*/
 		}
 
 		std::pair<MAfloat64, MAfloat64> CombineWeights(const std::string method){	
-			return weights.size()>0?MDUtils::CombineWithDistribution(weights, method):std::make_pair(0,0);
+			return MDUtils::CombineWithDistribution(weights, method);
 		}
 
 	};
