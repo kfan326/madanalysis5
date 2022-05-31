@@ -34,8 +34,8 @@
 
 // SampleAnalyzer headers
 #include "SampleAnalyzer/Commons/DataFormat/MCParticleFormat.h"
-#include "SampleAnalyzer/Commons/DataFormat/WeightCollection.h"
-//#include "SampleAnalyzer/Commons/DataFormat/WeightContainer.h"
+//#include "SampleAnalyzer/Commons/DataFormat/WeightCollection.h"
+#include "SampleAnalyzer/Commons/DataFormat/WeightContainer.h"
 #include "SampleAnalyzer/Commons/Service/LogService.h"
 
 
@@ -95,8 +95,8 @@ class MCEventFormat
   MAfloat64 Meff_;
 
   /// List of weights
-  WeightCollection multiweights_;
-  //WeightContainer multiweights_;
+  //WeightCollection multiweights_;
+  WeightContainer multiweights_;
 
 
   // -------------------------------------------------------------
@@ -167,13 +167,13 @@ class MCEventFormat
   const MAfloat64& alphaQCD()  const {return alphaQCD_; }
 
   /// Accessor to multiweights
-  const WeightCollection& multiweights()  const {return multiweights_; }
-  //const WeightContainer& multiweights()  const {return multiweights_; }
+  //const WeightCollection& multiweights()  const {return multiweights_; }
+  const WeightContainer& multiweights()  const {return multiweights_; }
 
 
   /// Accessor to multiweights
-  WeightCollection& multiweights() {return multiweights_; }
-  //WeightContainer& multiweights() {return multiweights_; }
+  //WeightCollection& multiweights() {return multiweights_; }
+  WeightContainer& multiweights() {return multiweights_; }
 
 
   /// Accessor to multiweights

@@ -1,9 +1,10 @@
 #pragma once
 
 #include <iostream>
-#include <unordered_map>
+#include <map>
 #include <vector>
 #include <numeric>
+
 
 #include "SampleAnalyzer/Commons/Service/LogService.h"
 #include "SampleAnalyzer/Commons/Service/ExceptionService.h"
@@ -38,17 +39,15 @@ class WeightContainer {
 	private:
 
 		//hash map for id-value pair, last element stores id of last added element.
-		std::unordered_map<MAuint32, MAfloat64> weights;
-		MAuint32 last_element;
-
+		std::map<MAuint32, MAfloat64> weights;
+	
 	public:
 
 		WeightContainer(){last_element = -1;}
 		~WeightContainer(){}
 
-		void Reset(){
+		void clear(){
 			weights.clear();
-			last_element = -1;
 		}
 
 		MAuint32 size() const {return weights.size();}
@@ -57,16 +56,15 @@ class WeightContainer {
 		MAbool Add(MAuint32 id, MAfloat64 value){
 			weights[id] = value;
 			bool insert_success = weights.find(id) != weights.end();
-			if(insert_success) {
-				last_element = id;
-			} else{
+			if(!insert_success) {
+			
 				throw EXCEPTION_WARNING("The Weight '" + std::to_string(id) +
                                 "' is defined at two times. Redundant values are skipped.","",0);
 			}
 			return insert_success;		
 		}
 
-		const std::unordered_map<MAuint32, MAfloat64>& GetWeights() const {return weights;}
+		const std::map<MAuint32, MAfloat64>& GetWeights() const {return weights;}
 
 		const MAfloat64& GetWeight (const MAuint32 id) const {
 			return weights.find(id)->second;
@@ -91,15 +89,6 @@ class WeightContainer {
 			for(const auto &id_value : weights){
 				INFO << "ID=" << id_value.first << " : " << id_value.second << endmsg;
 			}
-		}
-
-		MAfloat64 lastValue(){
-			return weights[last_element];
-			/*
-			else {
-				throw EXCEPTION_ERROR("There are no weights to return!")
-			}
-			*/
 		}
 
 		std::pair<MAfloat64, MAfloat64> CombineWeights(const std::string method){	
