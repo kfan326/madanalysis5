@@ -29,10 +29,12 @@
 // STL headers
 #include <string>
 #include <vector>
+#include <map>
 
 // SampleAnalyzer headers
 #include "SampleAnalyzer/Process/Counter/CounterManager.h"
 #include "SampleAnalyzer/Process/Writer/SAFWriter.h"
+#include "SampleAnalyzer/Commons/DataFormat/WeightContainer.h"
 
 
 namespace MA5
@@ -48,9 +50,11 @@ class RegionSelection
   MAbool surviving_;
   MAuint32 NumberOfCutsAppliedSoFar_;
   MAfloat64 weight_;
+  std::map<MAuint32, MAfloat64> multiWeight_;
 
   CounterManager cutflow_;
 
+  
   // -------------------------------------------------------------
   //                      method members
   // -------------------------------------------------------------
@@ -115,6 +119,19 @@ class RegionSelection
     SetNumberOfCutsAppliedSoFar(0);
     cutflow_.IncrementNInitial(weight);
     weight_=weight;
+  }
+
+
+  //Multiweight Integration implementation below
+
+  //second initalize function for multiweight class.
+  void InitializeForNewEvent(const WeightContainer &weights){
+	SetSurvivingTest(true);
+	SetNumberOfCutsAppliedSoFar(0);
+	for(const auto &weightMap : weights.GetWeights){
+		multiWeight_[weightMap.first] += weightMap.second;	
+	}
+
   }
 
 };
