@@ -55,13 +55,11 @@ class WeightContainer {
 				MAfloat64 mean = sum/size;
 				MAfloat64 squarediff = 0;
 				for(const auto &id_value : weight_hash){
-				squarediff += pow(id_value.second-mean, 2);
-			}
-			return std::make_pair(mean, sqrt(squarediff/size));		
+					squarediff += pow(id_value.second-mean, 2);
+				}
+				return std::make_pair(mean, sqrt(squarediff/size));		
 			}	
-
 			return std::make_pair(0 ,0);
-		
 		}	
 
 	

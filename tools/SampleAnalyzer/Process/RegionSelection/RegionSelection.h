@@ -125,14 +125,24 @@ class RegionSelection
   //Multiweight Integration implementation below
 
   //second initalize function for multiweight class.
-  void InitializeForNewEvent(const WeightContainer &weights){
+  void InitializeForNewEvent(WeightContainer &weights){
 	SetSurvivingTest(true);
 	SetNumberOfCutsAppliedSoFar(0);
-	for(const auto &weightMap : weights.GetWeights){
-		multiWeight_[weightMap.first] += weightMap.second;	
+	for(const auto &id_weight : weights.GetWeights()){
+		cutflow_.IncrementNInitial(id_weight.second);
+	}
+	multiWeight_ = weights.GetWeights();
+	
+  }
+
+  void IncrementCutFlow(WeightContainer &weights){
+	  for(const auto &id_weight : weights.GetWeights()){
+		cutflow_[NumberOfCutsAppliedSoFar_].Increment(id_weight.second);
+	  }
+	  NumberOfCutsAppliedSoFar_++;
+
 	}
 
-  }
 
 };
 

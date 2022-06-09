@@ -80,6 +80,7 @@ class MCSampleFormat
 
   // ----------------------- multiweights ------------------------
   WeightDefinition weight_definition_;
+  std::map<MAuint32, std::string> weight_names;
 
   // ----------------------- file info ---------------------------
   MAfloat64 xsection_;
@@ -124,6 +125,11 @@ class MCSampleFormat
     sumweight_positive_ = 0.;
     sumweight_negative_ = 0.;
   }
+
+  void addWeightNames(MAuint32 &id, std::string &name){
+	weight_names[id] = name;
+  }
+
 
   /// Accessoir to the generator type
   const MA5GEN::GeneratorType* GeneratorType() const

@@ -88,11 +88,7 @@ class WeightCollection
     {
       if (!ret.second)
       {
-        std::stringstream str;
-        str << id;
-        std::string idname;
-        str >> idname;
-        throw EXCEPTION_WARNING("The Weight '"+idname+
+	        throw EXCEPTION_WARNING("The Weight '"+std::to_string(id)+
                                 "' is defined at two times. Redundant values are skipped.","",0);
       }
     }

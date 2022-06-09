@@ -92,6 +92,7 @@ class CounterManager
   void IncrementNInitial(MAfloat32 weight=1.0)
   { initial_.Increment(weight); }
 
+ 
   /// Incrementing the initial number of events
   Counter& GetInitial()
   { return initial_; }
