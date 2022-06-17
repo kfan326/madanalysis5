@@ -143,6 +143,16 @@ class RegionSelection
 
 	}
 
+  std::map<MAuint32, MAfloat64> GetMultiWeights(){
+	  return multiWeight_;
+  }
+
+  void SetWeight(const WeightContainer &weights){
+	  for(const auto &id_weight : weights.GetWeights()){
+			multiWeight_[id_weight.first] = id_weight.second;
+	  }
+  }
+
 
 };
 

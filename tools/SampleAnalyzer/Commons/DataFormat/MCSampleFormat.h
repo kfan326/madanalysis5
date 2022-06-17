@@ -118,6 +118,7 @@ class MCSampleFormat
 
     // WeightDefinition
     weight_definition_.Reset();
+	weight_names.clear();
 
     // File info
     xsection_           = 0.;

@@ -228,7 +228,7 @@ MAbool HEPMCReader::FinalizeEvent(SampleFormat& mySample, EventFormat& myEvent)
 //------------------------------------------------------------------------------
 // FillWeightNames
 //------------------------------------------------------------------------------
-MAbool HEPMCReader::FillWeightNames(const std::string& line, SampleFormat &mySample)
+MAbool HEPMCReader::FillWeightNames(const std::string& line)
 {
   // Splitting line in words
   std::stringstream str;
@@ -243,7 +243,7 @@ MAbool HEPMCReader::FillWeightNames(const std::string& line, SampleFormat &mySam
   str >> nweights;
 
   // Storing weight names
-  //std::vector<std::string> weight_names(nweights);
+  std::vector<std::string> weight_names(nweights);
 
   // Filling weight names
   for (MAuint32 i=0;i<weight_names.size();i++)
@@ -253,8 +253,8 @@ MAbool HEPMCReader::FillWeightNames(const std::string& line, SampleFormat &mySam
     if (tmp=="") continue;
     
     if (tmp[0]=='"' && tmp[tmp.size()-1]=='"') tmp=tmp.substr(1,tmp.size()-2);
-    //weight_names[i]=tmp;
-	mySample.addWeightNames(i, temp);
+    weight_names[i]=tmp;
+	//mySample.addWeightNames(i, tmp);
   }
 
   // Ok
