@@ -30,10 +30,12 @@
 #include <iostream>
 #include <ostream>
 #include <vector>
+#include <map>
 
 // SampleAnalyzer headers
 #include "SampleAnalyzer/Process/Counter/Counter.h"
 #include "SampleAnalyzer/Process/Writer/SAFWriter.h"
+#include "SampleAnalyzer/Commons/DataFormat/WeightContainer.h"
 
 
 namespace MA5
@@ -108,6 +110,14 @@ class CounterManager
   /// Finalizing
   void Finalize()
   { Reset(); }
+
+  void IncrementNInitial(const std::map<MAuint32, MAfloat64> &multiweight){
+	initial_.Increment(multiweight);
+  }
+
+
+
+  
 
 };
 

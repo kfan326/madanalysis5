@@ -123,35 +123,35 @@ class RegionSelection
 
 
   //Multiweight Integration implementation below
+  void SetWeight(std::map<MAuint32, MAfloat64> &multiweight) {
+	multiWeight_ = multiweight;
+  }
 
-  //second initalize function for multiweight class.
-  void InitializeForNewEvent(WeightContainer &weights){
-	SetSurvivingTest(true);
-	SetNumberOfCutsAppliedSoFar(0);
-	for(const auto &id_weight : weights.GetWeights()){
-		cutflow_.IncrementNInitial(id_weight.second);
-	}
-	multiWeight_ = weights.GetWeights();
+  std::map<MAuint32, MAfloat64> GetWeights() {return multiWeight_;}
+
+  void IncrementCutFlow(const std::map<MAuint32, MAfloat64> &multiweight){
+	cutflow_[NumberOfCutsAppliedSoFar_].Increment(multiweight);
+	NumberOfCutsAppliedSoFar_++;
+  }
+
+  void InitializeForNewEvent(const std::map<MAuint32, MAfloat64> &multiweight){
+	  SetSurvivingTest(true);
+	  SetNumberOfCutsAppliedSoFar(0);
+	  cutflow_.IncrementNInitial(multiweight);
+	  multiWeight_=multiweight;
+  }
+
 	
-  }
 
-  void IncrementCutFlow(WeightContainer &weights){
-	  for(const auto &id_weight : weights.GetWeights()){
-		cutflow_[NumberOfCutsAppliedSoFar_].Increment(id_weight.second);
-	  }
-	  NumberOfCutsAppliedSoFar_++;
 
-	}
 
-  std::map<MAuint32, MAfloat64> GetMultiWeights(){
-	  return multiWeight_;
-  }
 
-  void SetWeight(const WeightContainer &weights){
-	  for(const auto &id_weight : weights.GetWeights()){
-			multiWeight_[id_weight.first] = id_weight.second;
-	  }
-  }
+
+
+
+	
+	
+
 
 
 };
