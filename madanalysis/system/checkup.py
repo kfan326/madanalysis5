@@ -554,7 +554,7 @@ class CheckUp():
 
         meta = json.loads(out)
 
-        latest_version = [int(x) for x in meta['tag_name'][1:].split(".")]
+        latest_version = [int(x) for x in meta['tag_name'][1:].split("_")[0].split(".")]
         current_version = [int(x) for x in self.archi_info.ma5_version.split(".")]
 
         def compare_versions(version1, version2):
@@ -574,6 +574,6 @@ class CheckUp():
             self.logger.warning(f"The latest version can be downloaded from : ")
             self.logger.warning(f"{meta['html_url']}")
         elif compare_versions(current_version, latest_version):
-            self.logger.warning(f"A not-updated version of MadAnalysis 5 is in use ({self.archi_info.ma5_version}).")
+            self.logger.warning(f"A non stable version of MadAnalysis 5 is in use (v{self.archi_info.ma5_version}).")
             self.logger.warning(f"The latest stable version can be downloaded from :")
             self.logger.warning(f"{meta['html_url']}")
